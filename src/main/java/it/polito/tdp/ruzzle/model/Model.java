@@ -1,11 +1,12 @@
 package it.polito.tdp.ruzzle.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import it.polito.tdp.ruzzle.db.DizionarioDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 
 public class Model {
 	private final int SIZE = 4;
@@ -53,9 +54,21 @@ public class Model {
 	public final StringProperty bindTxtTime() {
 		return this.txtTime;
 	}
-	
-	public boolean trovaParola(String parola) {
-		return ricerca.trovaParola(parola, board).size() > 0;
+
+	public Map<Pos, Boolean> trovaParola(String parola) {
+		return ricerca.trovaParola(parola, board);
+	}
+
+	public List<String> trovaTutte() {
+		List<String> trovate = new ArrayList<String>();
+		for (String p : dizionario) {
+			if (p.length() > 3) {
+				if (ricerca.trovaParola(p.toUpperCase(), board).size() > 0) {
+					trovate.add(p.toUpperCase());
+				}
+			}
+		}
+		return trovate;
 	}
 
 }

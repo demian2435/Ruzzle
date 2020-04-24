@@ -1,7 +1,9 @@
 package it.polito.tdp.ruzzle;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -86,16 +88,24 @@ public class FXMLController {
 
 	@FXML // fx:id="txtResul"
 	private TextArea txtResult; // Value injected by FXMLLoader
-	
-    @FXML
-    private Label txtTime;
+
+	@FXML
+	private Label txtTime;
 
 	@FXML
 	void handleProva(ActionEvent event) {
 		txtResult.clear();
+		for (Pos pos : letters.keySet()) {
+			letters.get(pos).setDefaultButton(false);
+		}
+
 		try {
-			if(model.trovaParola(txtParola.getText())) {
+			Map<Pos, Boolean> res = model.trovaParola(txtParola.getText().toUpperCase());
+			if (res.size() > 0) {
 				txtResult.appendText("Parola TROVATA!!");
+				for (Pos pos : res.keySet()) {
+					letters.get(pos).setDefaultButton(true);
+				}
 				return;
 			}
 			txtResult.appendText("Parola non presente");
@@ -112,6 +122,16 @@ public class FXMLController {
 
 	@FXML
 	void handleRisolvi(ActionEvent event) {
+		txtResult.clear();
+		for (Pos pos : letters.keySet()) {
+			letters.get(pos).setDefaultButton(false);
+		}
+
+		List<String> tutte = model.trovaTutte();
+		txtResult.appendText(String.format("Ho trovato %d soluzioni\n", tutte.size()));
+		for (String string : tutte) {
+			txtResult.appendText(string + "\n");
+		}
 
 	}
 

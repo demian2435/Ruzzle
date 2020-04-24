@@ -10,10 +10,10 @@ public class Ricerca {
 	private Map<Pos, Boolean> result;
 
 	public Map<Pos, Boolean> trovaParola(String parola, Board board) {
-		this.parola = parola.toUpperCase();
+		this.parola = parola;
 		this.board = board;
 		this.result = new HashMap<Pos, Boolean>();
-		String primaLettera = (this.parola.charAt(0) + "");
+		String primaLettera = this.parola.charAt(0) + "";
 		List<Pos> puntiInizio = board.contains(primaLettera);
 		if (puntiInizio.size() == 0) {
 			return result;
@@ -31,24 +31,24 @@ public class Ricerca {
 
 	private void ricorsione(String parziale, Map<Pos, Boolean> percorso, Pos ultimaPos, int livello) {
 		if (livello == parola.length()) {
-			if(parola.equals(parziale))
-			result = new HashMap<Pos, Boolean>(percorso);
+			if (parola.equals(parziale))
+				result = new HashMap<Pos, Boolean>(percorso);
 			return;
 		}
-		
-		if(result.size() != 0) {
+
+		if (result.size() != 0) {
 			return;
 		}
-				
+
 		for (Pos pos : board.getAdjacencies(ultimaPos)) {
-			String letteraDaTrovare = (parola.charAt(livello) + "").toUpperCase();
+			String letteraDaTrovare = parola.charAt(livello) + "";
 			if (!percorso.containsKey(pos)) {
 				String letteraVicina = board.getCellValueProperty(pos).get();
 				if (letteraVicina.equals(letteraDaTrovare)) {
-					String newParziale = parziale + letteraVicina;
-					Map<Pos, Boolean> newPercorso = new HashMap<Pos, Boolean>(percorso);
-					newPercorso.put(pos, true);
-					ricorsione(newParziale, newPercorso, pos, livello + 1);
+					parziale = parziale + letteraVicina;
+					percorso.put(pos, true);
+					ricorsione(parziale, percorso, pos, livello + 1);
+					return;
 				}
 			}
 		}
